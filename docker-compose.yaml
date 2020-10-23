@@ -38,6 +38,7 @@ services:
       - 'npmbuild: 10.10.0.3'
       - 'pictionary: 10.10.0.4'
       - 'mysql: 10.10.0.5'
+  #tomcatコンテナの設定
   pictionary:
     build: ./pictionary
     hostname: pictionary
@@ -51,8 +52,8 @@ services:
     networks:
       pictionary_net:
         ipv4_address: 10.10.0.4
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
+    extra_hosts:    #IPアドレスとDNSホスト名
+      - 'nginx: 10.10.0.2'    #10.10.0.1はゲートウェイ用なので使わない
       - 'npmbuild: 10.10.0.3'
       - 'pictionary: 10.10.0.4'
       - 'mysql: 10.10.0.5'
@@ -84,4 +85,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.10.0.0/24
+        - subnet: 10.10.0.0/24    #/24の場合は一番後ろの0の部分を0～255(実質は2～254)の範囲内で設定可能
