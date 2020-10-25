@@ -1,8 +1,10 @@
-# You can pick any OS. But this time, I choose Centos 8.
-FROM centos:latest
+# You can pick any OS. But this time, I choose Alpine Linux.
+FROM alpine
 
 # Change workplace directory inside of docker space.
 WORKDIR /root
+ARG PJTDIR='/root/Pictionarizer/pictionarizer-ui'
+ARG GITCLONE='git clone -b test https://github.com/tuimac/Pictionarizer.git'
 
 # This script deploy files under pictionary build directory to OS mounted directory.
 # Because when you run docker-compose and mount target directory, files under that directory are deleted.
@@ -16,9 +18,10 @@ ADD auto-copy.sh /root/auto-copy.sh
 # Line4. Install react packages without checking vulnerabilities(--no-audit).
 # Line5. Build react tsx files to native files(.js, .css, .html)
 # Line6. Move native file to directory is mounted by OS to be refered from Nginx.
-RUN yum install -y nodejs npm git tree && \
-    git clone https://github.com/Shinichi1125/Pictionarizer.git && \
-    cd /root/Pictionarizer/pictionarizer-ui && \
+RUN apk add -y nodejs npm git bash && \
+    ${GITCLONE} && \
+    cd ${PJTDIR} && \
+    chmod +x /root/auto-copy.sh && \
     npm install --no-audit && \
     npm run build
 

@@ -5,5 +5,5 @@ TO='/tmp'
 
 while true; do
    cp -rp $FROM $TO
-   time 3
+   sleep 3
 done
