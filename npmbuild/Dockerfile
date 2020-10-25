@@ -1,5 +1,5 @@
 # You can pick any OS. But this time, I choose Alpine Linux.
-FROM alpine
+FROM alpine:latest
 
 # Change workplace directory inside of docker space.
 WORKDIR /root
@@ -9,7 +9,8 @@ ARG GITCLONE='git clone -b test https://github.com/tuimac/Pictionarizer.git'
 # This script deploy files under pictionary build directory to OS mounted directory.
 # Because when you run docker-compose and mount target directory, files under that directory are deleted.
 # Then that directory is mounted by nginx container to refer to index.html, need to keep copy built files to /tmp.
-ADD auto-copy.sh /root/auto-copy.sh
+ADD init.sh /root/init.sh
+ADD init.sql /opt/init.sql
 
 # Explanation of each line within RUN section.
 # Line1. Install some modules to build react application.
@@ -18,12 +19,11 @@ ADD auto-copy.sh /root/auto-copy.sh
 # Line4. Install react packages without checking vulnerabilities(--no-audit).
 # Line5. Build react tsx files to native files(.js, .css, .html)
 # Line6. Move native file to directory is mounted by OS to be refered from Nginx.
-RUN apk add -y nodejs npm git bash && \
+RUN apk add nodejs npm git bash mysql-client && \
     ${GITCLONE} && \
-    cd ${PJTDIR} && \
-    chmod +x /root/auto-copy.sh && \
-    npm install --no-audit && \
-    npm run build
+    cd ${PJTDIR}
+    #npm install --no-audit && \
+    #npm run build
 
-# Execute auto-copy.sh when docker container just start.
-ENTRYPOINT /root/auto-copy.sh
+# Execute init.sh when docker container just start.
+ENTRYPOINT /root/init.sh
