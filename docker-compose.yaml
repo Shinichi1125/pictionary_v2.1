@@ -17,7 +17,7 @@ services:
         ipv4_address: 10.10.0.5
     extra_hosts:
       - 'nginx: 10.10.0.2'
-      - 'tomcat: 10.10.0.4'
+      - 'springboot: 10.10.0.4'
       - 'mysql: 10.10.0.5'
   npmbuld:
     build: ./npmbuild
@@ -34,22 +34,23 @@ services:
         ipv4_address: 10.10.0.3
     extra_hosts:
       - 'nginx: 10.10.0.2'
-      - 'tomcat: 10.10.0.4'
+      - 'springboot: 10.10.0.4'
       - 'mysql: 10.10.0.5'
-  mavenbuld:
-    build: ./mavenbuild
-    hostname: mavenbuild
-    container_name: mavenbuild
+  springboot:
+    build: ./springboot
+    hostname: springboot
+    restart: always
+    container_name: springboot
     volumes:
-      - './mavenbuild/volume:/tmp/build'
+      - './springboot/volume:/tmp'
     tty: true
     stdin_open: true
     networks:
       pictionary_net:
-        ipv4_address: 10.10.0.6
+        ipv4_address: 10.10.0.4
     extra_hosts:
       - 'nginx: 10.10.0.2'
-      - 'tomcat: 10.10.0.4'
+      - 'springboot: 10.10.0.4'
       - 'mysql: 10.10.0.5'
   nginx:
     build: ./nginx
@@ -68,24 +69,7 @@ services:
         ipv4_address: 10.10.0.2
     extra_hosts:
       - 'nginx: 10.10.0.2'
-      - 'tomcat: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
-  #tomcatコンテナの設定
-  tomcat:
-    build: ./tomcat
-    hostname: tomcat
-    container_name: tomcat
-    volumes:
-      - './mavenbuild/volume:/usr/local/tomcat/webapps/'
-      - './tomcat/server.xml:/usr/local/tomcat/conf/server.xml'
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.4
-    extra_hosts:    #IPアドレスとDNSホスト名
-      - 'nginx: 10.10.0.2'    #10.10.0.1はゲートウェイ用なので使わない
-      - 'tomcat: 10.10.0.4'
+      - 'springboot: 10.10.0.4'
       - 'mysql: 10.10.0.5'
 # Define default network.
 networks:
