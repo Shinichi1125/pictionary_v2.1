@@ -4,7 +4,7 @@ FROM alpine:latest
 # Change workplace directory inside of docker space.
 WORKDIR /root
 ARG PJTDIR='/root/Pictionarizer/pictionarizer-ui'
-ARG GITCLONE='git clone -b test https://github.com/tuimac/Pictionarizer.git'
+ARG GITCLONE='git clone https://github.com/Shinichi1125/Pictionarizer.git'
 
 # This script deploy files under pictionary build directory to OS mounted directory.
 # Because when you run docker-compose and mount target directory, files under that directory are deleted.
