@@ -2,4 +2,4 @@ FROM mysql:8.0
 
 ADD my.cnf /etc/mysql/my.cnf
 
-EXPOSE 3306
+EXPOSE 13306
