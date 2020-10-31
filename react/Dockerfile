@@ -1,14 +1,13 @@
 # You can pick any OS. But this time, I choose Alpine Linux.
 FROM alpine:latest
 
+EXPOSE 3000
+
 # Change workplace directory inside of docker space.
 WORKDIR /root
 ARG PJTDIR='/root/Pictionarizer/pictionarizer-ui'
 ARG GITCLONE='git clone https://github.com/Shinichi1125/Pictionarizer.git'
 
-# This script deploy files under pictionary build directory to OS mounted directory.
-# Because when you run docker-compose and mount target directory, files under that directory are deleted.
-# Then that directory is mounted by nginx container to refer to index.html, need to keep copy built files to /tmp.
 ADD init.sh /root/init.sh
 
 # Explanation of each line within RUN section.
@@ -19,10 +18,7 @@ ADD init.sh /root/init.sh
 # Line5. Build react tsx files to native files(.js, .css, .html)
 # Line6. Move native file to directory is mounted by OS to be refered from Nginx.
 RUN apk add nodejs npm git bash && \
-    ${GITCLONE} && \
-    cd ${PJTDIR} && \
-    npm install --no-audit && \
-    npm run build
+    ${GITCLONE}
 
 # Execute init.sh when docker container just start.
-ENTRYPOINT /root/init.sh
+#ENTRYPOINT /root/init.sh
