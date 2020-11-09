@@ -1,71 +1,13 @@
 version: '3'
 services:
-  npmbuld:
-    build: ./npmbuild
-    hostname: npmbuild
-    container_name: npmbuild
-    ports:
-      - '3000:3000'
-    volumes:
-      - './npmbuild/volume:/tmp/build'
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.3
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'npmbuild: 10.10.0.3'
-      - 'pictionary: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
-  nginx:
-    build: ./nginx
-    hostname: nginx
-    container_name: nginx
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - './npmbuild/volume:/var/www/html'
-      - './nginx/nginx.conf:/etc/nginx/nginx.conf'
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.2
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'npmbuild: 10.10.0.3'
-      - 'pictionary: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
-  #tomcatコンテナの設定
-  pictionary:
-    build: ./pictionary
-    hostname: pictionary
-    container_name: pictionary
-    ports:
-      - '8080:8080'
-    volumes:
-      - './pictionary/volume:/tmp'
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.4
-    extra_hosts:    #IPアドレスとDNSホスト名
-      - 'nginx: 10.10.0.2'    #10.10.0.1はゲートウェイ用なので使わない
-      - 'npmbuild: 10.10.0.3'
-      - 'pictionary: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
   mysql:
     build: ./mysql
     restart: always
     hostname: mysql
     container_name: mysql
-    ports:
-      - 13306:3306
     volumes:
       - './mysql/volume:/var/lib/mysql'
+      - './mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
     environment:
       MYSQL_ROOT_PASSWORD: ThisisCS50
       MYSQL_DATABASE: pictionary
@@ -75,8 +17,56 @@ services:
         ipv4_address: 10.10.0.5
     extra_hosts:
       - 'nginx: 10.10.0.2'
-      - 'npmbuild: 10.10.0.3'
-      - 'pictionary: 10.10.0.4'
+      - 'react: 10.10.0.3'
+      - 'springboot: 10.10.0.4'
+      - 'mysql: 10.10.0.5'
+  springboot:
+    build: ./springboot
+    hostname: springboot
+    restart: always
+    container_name: springboot
+    tty: true
+    stdin_open: true
+    networks:
+      pictionary_net:
+        ipv4_address: 10.10.0.4
+    extra_hosts:
+      - 'nginx: 10.10.0.2'
+      - 'react: 10.10.0.3'
+      - 'springboot: 10.10.0.4'
+      - 'mysql: 10.10.0.5'
+  react:
+    build: ./react
+    hostname: react
+    container_name: react
+    tty: true
+    stdin_open: true
+    networks:
+      pictionary_net:
+        ipv4_address: 10.10.0.3
+    extra_hosts:
+      - 'nginx: 10.10.0.2'
+      - 'react: 10.10.0.3'
+      - 'springboot: 10.10.0.4'
+      - 'mysql: 10.10.0.5'
+  nginx:
+    build: ./nginx
+    hostname: nginx
+    container_name: nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - './nginx/nginx.conf:/etc/nginx/nginx.conf'
+    tty: true
+    stdin_open: true
+    networks:
+      pictionary_net:
+        ipv4_address: 10.10.0.2
+    extra_hosts:
+      - 'nginx: 10.10.0.2'
+      - 'react: 10.10.0.3'
+      - 'springboot: 10.10.0.4'
       - 'mysql: 10.10.0.5'
 # Define default network.
 networks:
