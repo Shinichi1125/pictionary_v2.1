@@ -2,6 +2,7 @@ version: '3'
 services:
   mysql:
     build: ./mysql
+    image: ${DOCKER_USER}/mysql
     restart: always
     hostname: mysql
     container_name: mysql
@@ -22,6 +23,7 @@ services:
       - 'mysql: 10.10.0.5'
   springboot:
     build: ./springboot
+    image: ${DOCKER_USER}/springboot
     hostname: springboot
     restart: always
     container_name: springboot
@@ -37,6 +39,7 @@ services:
       - 'mysql: 10.10.0.5'
   react:
     build: ./react
+    image: ${DOCKER_USER}/react
     hostname: react
     container_name: react
     tty: true
@@ -51,6 +54,7 @@ services:
       - 'mysql: 10.10.0.5'
   nginx:
     build: ./nginx
+    image: ${DOCKER_USER}/nginx
     hostname: nginx
     container_name: nginx
     ports:
