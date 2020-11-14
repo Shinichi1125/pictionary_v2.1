@@ -8,7 +8,6 @@ services:
     container_name: mysql
     volumes:
       - './mysql/volume:/var/lib/mysql'
-      - './mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
     environment:
       MYSQL_ROOT_PASSWORD: ThisisCS50
       MYSQL_DATABASE: pictionary
@@ -60,8 +59,6 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    volumes:
-      - './nginx/nginx.conf:/etc/nginx/nginx.conf'
     tty: true
     stdin_open: true
     networks:
