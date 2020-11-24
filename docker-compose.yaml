@@ -2,7 +2,7 @@ version: '3'
 services:
   mysql:
     build: ./mysql
-    image: ${DOCKER_USER}/mysql
+    image: ${DOCKER_USER}/mysql:{CIRCLE_SHA1}
     restart: always
     hostname: mysql
     container_name: mysql
@@ -23,7 +23,7 @@ services:
       - 'mysql: 10.10.0.5'
   springboot:
     build: ./springboot
-    image: ${DOCKER_USER}/springboot
+    image: ${DOCKER_USER}/springboot:{CIRCLE_SHA1}
     hostname: springboot
     restart: always
     container_name: springboot
@@ -39,7 +39,7 @@ services:
       - 'mysql: 10.10.0.5'
   react:
     build: ./react
-    image: ${DOCKER_USER}/react
+    image: ${DOCKER_USER}/react:{CIRCLE_SHA1}
     hostname: react
     container_name: react
     tty: true
@@ -54,7 +54,7 @@ services:
       - 'mysql: 10.10.0.5'
   nginx:
     build: ./nginx
-    image: ${DOCKER_USER}/nginx
+    image: ${DOCKER_USER}/nginx:{CIRCLE_SHA1}
     hostname: nginx
     container_name: nginx
     ports:
