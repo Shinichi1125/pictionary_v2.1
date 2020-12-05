@@ -4,77 +4,23 @@ services:
     build: ./mysql
     image: ${DOCKER_USER}/mysql:${CIRCLE_SHA1}
     restart: always
-    hostname: mysql
-    container_name: mysql
     volumes:
       - './mysql/volume:/var/lib/mysql'
       - './mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
     environment:
       MYSQL_ROOT_PASSWORD: ThisisCS50
       MYSQL_DATABASE: pictionary
-    tty: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.5
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'react: 10.10.0.3'
-      - 'springboot: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
   springboot:
     build: ./springboot
     image: ${DOCKER_USER}/springboot:${CIRCLE_SHA1}
-    hostname: springboot
     restart: always
-    container_name: springboot
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.4
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'react: 10.10.0.3'
-      - 'springboot: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
   react:
     build: ./react
     image: ${DOCKER_USER}/react:${CIRCLE_SHA1}
-    hostname: react
-    container_name: react
-    tty: true
     stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.3
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'react: 10.10.0.3'
-      - 'springboot: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
   nginx:
     build: ./nginx
     image: ${DOCKER_USER}/nginx:${CIRCLE_SHA1}
-    hostname: nginx
-    container_name: nginx
     ports:
       - '80:80'
       - '443:443'
-    tty: true
-    stdin_open: true
-    networks:
-      pictionary_net:
-        ipv4_address: 10.10.0.2
-    extra_hosts:
-      - 'nginx: 10.10.0.2'
-      - 'react: 10.10.0.3'
-      - 'springboot: 10.10.0.4'
-      - 'mysql: 10.10.0.5'
-# Define default network.
-networks:
-  pictionary_net:
-    name: pictionary
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.10.0.0/24    #/24の場合は一番後ろの0の部分を0～255(実質は2～254)の範囲内で設定可能
